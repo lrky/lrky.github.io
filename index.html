@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ww1</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+<style>
+  body {
+    background-color: #1a1a1a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .file-explorer {
+    width: 300px;
+    margin: 20px auto;
+    border: 1px solid #333;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .file-tree {
+    padding: 10px;
+  }
+  
+  .folder {
+    margin-bottom: 5px;
+    position: relative;
+  }
+  
+  .folder i {
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .folder-name {
+    cursor: pointer;
+  }
+  
+  .folder-content {
+    display: none;
+    padding-left: 20px;
+  }
+  
+  .file {
+    padding-left: 20px;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .file:hover {
+    background-color: #333;
+    cursor: pointer;
+  }
+  
+  .file a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Vertical line */
+  .folder:before {
+    content: '';
+    position: absolute;
+    top: 20px; /* Adjust the top position */
+    left: 6px; /* Adjust the left position */
+    bottom: 0;
+    width: 2px;
+    background-color: #555;
+    display: none; /* Hide by default */
+  }
+
+  /* Show the vertical line when the folder is open */
+  .folder.open:before {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<div class="file-explorer">
+  <div class="file-tree">
+    <div class="folder" onclick="toggleFolder(this)"> <!--Content-->
+      <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Content</span>
+      <div class="folder-content">
+        <div class="file">
+          <a href="https://youtube.com" onclick="openLink(event, this)">YouTube</a>
+        </div>
+        <div class="file">
+          <a href="https://twitch.tv" onclick="openLink(event, this)">Twitch.tv</a>
+        </div>
+        <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Anime-->
+          <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Anime</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://aniwave.to/home" onclick="openLink(event, this)">aniwave.to</a>
+              </div>
+              <div class="file">
+                <a href="https://anix.to" onclick="openLink(event, this)">anix.to</a>
+              </div>
+              <div class="file">
+                <a href="https://hianime.to" onclick="openLink(event, this)">hianime.to</a>
+              </div>
+              <div class="file">
+                <a href="https://zoroxtv.to" onclick="openLink(event, this)">zoroxtv.to</a>
+              </div>
+            </div>
+        </div>
+        <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--TV-->
+          <i class="fas fa-folder"></i><span class="folder-name">&nbsp;TV</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://fmovies24.to/home" onclick="openLink(event, this)">fmovies.to</a>
+              </div>
+              <div class="file">
+                <a href="https://f2movies.to/" onclick="openLink(event, this)">f2movies.to</a>
+              </div>
+              <div class="file">
+                <a href="https://movies7.to/home" onclick="openLink(event, this)">movies7.to</a>
+              </div>
+              <div class="file">
+                <a href="https://ww1.123moviesfree.net/home" onclick="openLink(event, this)">123moviesfree.net</a>
+              </div>
+              <div class="file">
+                <a href="https://app.plex.tv/desktop/#!/live-tv" onclick="openLink(event, this)">Plex.tv</a>
+              </div>
+              <div class="file">
+                <a href="https://thetvapp.to" onclick="openLink(event, this)">thetvapp.to</a>
+              </div>
+              <div class="file">
+                <a href="https://tubitv.com/live" onclick="openLink(event, this)">TubiTV.com</a>
+              </div>
+              <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Youtube Frontends-->
+                <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Youtube Frontends</span>
+                  <div class="folder-content">
+                    <div class="file">
+                      <a href="https://docs.invidious.io/instances/" onclick="openLink(event, this)">Invidious Frontends</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://piped.video/trending" onclick="openLink(event, this)">Piped Frontend</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://piped-material.১.net" onclick="openLink(event, this)">Piped Material Frontend</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://tube.cadence.moe" onclick="openLink(event, this)">CloudTube Frontend</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://poketube.fun" onclick="openLink(event, this)">PokeTube Frontend</a>
+                    </div>
+                    <div class="file">
+                      <a href="#" onclick="openLink(event, this)"></a>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="folder" onclick="toggleFolder(this)"> <!--AI-->
+      <i class="fas fa-folder"></i><span class="folder-name">&nbsp;AI</span>
+      <div class="folder-content">
+        <div class="file">
+          <a href="https://chatgpt.com" onclick="openLink(event, this)">ChatGPT</a>
+        </div>
+        <div class="file">
+          <a href="https://www.perplexity.ai" onclick="openLink(event, this)">Perplexity</a>
+        </div>
+        <div class="file">
+          <a href="https://www.futuretools.io/?pricing-model=free" onclick="openLink(event, this)">Free AI Tools</a>
+        </div>
+      </div>
+    </div>
+    <div class="folder" onclick="toggleFolder(this)"> <!--Torrents-->
+      <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Torrents</span>
+      <div class="folder-content">
+        <div class="file">
+            <a href="https://www.1337x.to" onclick="openLink(event, this)">1337x</a>
+        </div>
+        <div class="file">
+            <a href="https://pcgamestorrents.com" onclick="openLink(event, this)">IGG Games</a>
+        </div>
+        <div class="file">
+          <a href="https://steamrip.com" onclick="openLink(event, this)">SteamRip</a>
+        </div>
+        <div class="file">
+            <a href="https://www.fitgirl-repacks.site" onclick="openLink(event, this)">Fitgirl-Repacks</a>
+        </div>
+        <div class="file">
+          <a href="https://dodi-repacks.site/" onclick="openLink(event, this)">Dodi-Repacks</a>
+        </div>
+        <div class="file">
+            <a href="https://www.thepiratebay.org/index.html" onclick="openLink(event, this)">ThePirateBay</a>
+        </div>
+        <div class="file">
+            <a href="https://solidtorrents.to" onclick="openLink(event, this)">SolidTorrents</a>
+        </div>
+        <div class="file">
+            <a href="https://www.torrentgalaxy.to" onclick="openLink(event, this)">TorrentGalaxy</a>
+        </div>
+        <div class="file">
+            <a href="https://www.bitsearch.to" onclick="openLink(event, this)">BitSearch</a>
+        </div>
+        <div class="file">
+            <a href="https://www.torrends.to" onclick="openLink(event, this)">Torrends</a>
+        </div>
+        <div class="file">
+            <a href="https://torrentz2.nz" onclick="openLink(event, this)">Torrentz2</a>
+        </div>
+        <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Emulation-->
+          <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Emulation</span>
+          <div class="folder-content">
+            <div class="file">
+              <a href="https://www.romstation.fr/emulators/" onclick="openLink(event, this)">Emulators</a>
+            </div>
+            <div class="file">
+              <a href="https://cse.google.com/cse?cx=20c2a3e5f702049aa" onclick="openLink(event, this)">Custom Google Search</a>
+            </div>
+            <div class="file">
+              <a href="https://dlpsgame.com" onclick="openLink(event, this)">Dlpsgame</a>
+            </div>
+            <div class="file">
+              <a href="https://www.emugames.net" onclick="openLink(event, this)">EmuGames</a>
+            </div>
+            <div class="file">
+              <a href="https://www.gameginie.com" onclick="openLink(event, this)">GameGinie</a>
+            </div>
+            <div class="file">
+              <a href="https://emulation.gametechwiki.com/index.php/ROM_%26_ISO_sites#ROM_.26_ISO_websites" onclick="openLink(event, this)">GameTechWiki</a>
+            </div>
+            <div class="file">
+              <a href="https://madloader.com" onclick="openLink(event, this)">Madloader</a>
+            </div>
+            <div class="file">
+              <a href="https://myrient.erista.me/files/" onclick="openLink(event, this)">Myrient</a>
+            </div>
+            <div class="file">
+              <a href="https://nswrom.com" onclick="openLink(event, this)">Nwsrom</a>
+            </div>
+            <div class="file">
+                <a href="https://r-roms.github.io" onclick="openLink(event, this)">r-roms.github.io</a>
+            </div>
+            <div class="file">
+              <a href="https://www.reddit.com/r/Piracy/wiki/megathread/" onclick="openLink(event, this)">r/Piracy Megathread</a>
+            </div>
+            <div class="file">
+              <a href="https://romsfun.com/roms" onclick="openLink(event, this)">RomsFun</a>
+            </div>
+            <div class="file">
+              <a href="https://romzie.com" onclick="openLink(event, this)">Romsie</a>
+            </div>
+            <div class="file">
+              <a href="https://steamrip.com" onclick="openLink(event, this)">SteamRIP</a>
+            </div>
+            <div class="file">
+              <a href="https://theromdepot.com" onclick="openLink(event, this)">TheRomDepot</a>
+            </div>
+            <div class="file">
+              <a href="https://vimm.net/vault" onclick="openLink(event, this)">Vimm's Lair</a>
+            </div>
+            <div class="file">
+              <a href="https://wowroms.com" onclick="openLink(event, this)">WowRoms</a>
+            </div>
+            <div class="file">
+              <a href="#" onclick="openLink(event, this)"></a>
+            </div>
+            
+            
+            <div class="file">
+              <a href="https://ziperto.com/" onclick="openLink(event, this)">Ziperto</a>
+            </div>
+            <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Roms-->
+              <i class="fas fa-folder"></i><span class="folder-name">&nbsp;ROMs</span>
+              <div class="folder-content">
+                <div class="file">
+                  <a href="#" onclick="openLink(event, this)"></a>
+                </div>
+                <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--GameCube-->
+                  <i class="fas fa-folder"></i><span class="folder-name">&nbsp;GameCube</span>
+                  <div class="folder-content">
+                    <div class="file">
+                      <a href="https://romsfun.com/download/batman-begins-6-92194/2" onclick="openLink(event, this)">Batman Begins (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/call-of-duty-finest-hour-28995/4" onclick="openLink(event, this)">COD: Finest Hour (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/call-of-duty-2-big-red-one-3-92234/6" onclick="openLink(event, this)">COD2: Big Red One (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/hitman-2-silent-assassin-29478/4" onclick="openLink(event, this)">Hitman 2: Silent Assasin</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/the-legend-of-zelda-collectors-addition-47252/2" onclick="openLink(event, this)">Legend of Zelda - Collectors Edition (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/lego-star-wars-the-video-game-2-92612/3" onclick="openLink(event, this)">LEGO Star Wars</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/lego-star-wars-ii-the-original-trilogy-3-28350/3" onclick="openLink(event, this)">LEGO Starwars II (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/luigis-mansion-27498/4" onclick="openLink(event, this)">Luigi's Mansion (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/madagascar-2-29083/7" onclick="openLink(event, this)">Madagascar (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/mario-kart-double-dash-27533/6" onclick="openLink(event, this)">Mario Kart - Double Dash (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/mario-smash-football-27823/1" onclick="openLink(event, this)">Mario Smash Football (EU)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/medal-of-honor-frontline-2-92666/5" onclick="openLink(event, this)">MoH: Frontline</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/metroid-prime-2-2-27479/6" onclick="openLink(event, this)">Metroid Prime (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/need-for-speed-hot-pursuit-2-2-92762/2" onclick="openLink(event, this)">NFS: Hot Pursiut 2 (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/spongebob-squarepants-battle-for-bikini-bottom-2-28405/3" onclick="openLink(event, this)">Spongebob: BFBB (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/spider-man-4-47222/7" onclick="openLink(event, this)">Spiderman (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/spider-man-2-5-27734/5" onclick="openLink(event, this)">Spiderman 2 (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/spyro-a-heros-tail-28982/2" onclick="openLink(event, this)">Spyro: A Heros Tail</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/the-legend-of-spyro-a-new-beginning-29388/2" onclick="openLink(event, this)">Spyro: A New Beginning</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/spyro-enter-the-dragonfly-28498/2" onclick="openLink(event, this)">Spyro: Enter the Dragonfly (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/star-wars-the-clone-wars-29528/5" onclick="openLink(event, this)">Star Wars: The Clone Wars</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/super-mario-sunshine-27449/5" onclick="openLink(event, this)">Super Mario Sunhine (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/super-mario-strikers-46709/2" onclick="openLink(event, this)">Super Mario Strikers (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/super-monkey-ball-2-28252/4" onclick="openLink(event, this)">Super Monkey Ball 2 (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/super-smash-bros-melee-27505/1" onclick="openLink(event, this)">Super Smash Bros Melee (EU)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/the-incredibles-2-28489/3" onclick="openLink(event, this)">The Incredibles (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/tony-hawks-american-wasteland-28243/2" onclick="openLink(event, this)">Tony Hawk's American Wasteland (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/tony-hawks-underground-4-93088/2" onclick="openLink(event, this)">Tony Hawk's Underground (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/tony-hawks-underground-2-4-93090/2" onclick="openLink(event, this)">Tony Hawk's Ungerground 2 (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/true-crime-streets-of-la-2-93100/3" onclick="openLink(event, this)">True Crime: LA (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/true-crime-new-york-city-47216/4" onclick="openLink(event, this)">True Crime: NYC (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/wario-world-27669/4" onclick="openLink(event, this)">Wario World (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/xiii-27710/2" onclick="openLink(event, this)">Xiii (EU)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/x-men-legends-3-93160/3" onclick="openLink(event, this)">X-Men Legends (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/x-men-legends-3-93160/7" onclick="openLink(event, this)">X-Men Legends II (USA)</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="file">
+                  <a href="#" onclick="openLink(event, this)"></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Ebooks-->
+          <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Ebooks</span>
+          <div class="folder-content">
+            <div class="file">
+              <a href="https://www.pdfdrive.to/" onclick="openLink(event, this)">pdfdrive.to</a>
+            </div>
+            <div class="file">
+              <a href="http://libgen.rs/" onclick="openLink(event, this)">libgen.rs</a>
+            </div>
+            <div class="file">
+              <a href="https://ravebooksearch.com/" onclick="openLink(event, this)">Ravebooksearch</a>
+            </div>
+            <div class="file">
+              <a href="https://annas-archive.org/" onclick="openLink(event, this)">Anna's Archive</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="folder" onclick="toggleFolder(this)"> <!--Downloads-->
+        <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Downloads</span>
+        <div class="folder-content">
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--AV-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;AV</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://download.bitdefender.com/windows/installer/en-us/bitdefender_avfree.exe" onclick="openLink(event, this)">Bitdefender (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://usa.kaspersky.com/downloads/free-antivirus/" onclick="openLink(event, this)">Kaspersky (Windows x64)</a>
+              </div>
+            </div>
+          </div>
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Browsers-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Browsers</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://releases.arc.net/windows/ArcInstaller.exe" onclick="openLink(event, this)">Arc Browser (Windows 11 x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://laptop-updates.brave.com/download/BRV010?bitness=64" onclick="openLink(event, this)">Brave (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/ungoogled-software/ungoogled-chromium/archive/refs/heads/master.zip" onclick="openLink(event, this)">Chromium (Windows x64 Portable)</a>
+              </div>
+              <div class="file">
+                <a href="https://www.mozilla.org/en-US/firefox/download/thanks/" onclick="openLink(event, this)">FireFox (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://gitlab.com/api/v4/projects/44042130/packages/generic/librewolf/126.0-1/librewolf-126.0-1-windows-x86_64-portable.zip" onclick="openLink(event, this)">LibreWolf (Windows x86_x64 Portable)</a>
+              </div>
+              <div class="file">
+                <a href="https://mullvad.net/en/download/browser/win64/latest" onclick="openLink(event, this)">Mullvad (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://www.opera.com/computer/thanks?ni=eapgx&os=windows" onclick="openLink(event, this)">Opera GX (Windows x64)</a>
+              </div>
+            </div>
+          </div>
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--General-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;General</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://www.7-zip.org/a/7z2405-x64.exe" onclick="openLink(event, this)">7Zip (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/RamonUnch/AltSnap/releases/download/1.63/AltSnap1.63-x64-inst.exe" onclick="openLink(event, this)">AltSnap (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://www.autohotkey.com/download/ahk-v2.exe" onclick="openLink(event, this)">AutoHotKey (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://download.sysinternals.com/files/Autoruns.zip" onclick="openLink(event, this)">Autoruns (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/Klocman/Bulk-Crap-Uninstaller/releases/download/v5.8/BCUninstaller_5.8_portable.zip" onclick="openLink(event, this)">BC Uninstaller (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://personalfirewall.comodo.com/download/during-download.php?prod=firewall" onclick="openLink(event, this)">Comodo Firewall (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://www.daemon-tools.cc/downloads#install-dtLite-offer" onclick="openLink(event, this)">Daemon Tools Lite (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/arsenetar/dupeguru/releases/download/4.3.1/dupeguru-win64_4.3.1.zip" onclick="openLink(event, this)">DupeGuru (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://download.foldingathome.org/releases/public/release/fah-installer/windows-10-32bit/v7.6/fah-installer_7.6.21_x86.exe" onclick="openLink(event, this)">Folding@Home (Windows x86)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/emoacht/Monitorian/releases/download/4.6.12-Installer/MonitorianInstaller4612.zip" onclick="openLink(event, this)">Monitorian (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://downloads.ntlite.com/files/NTLite_setup_x64.exe" onclick="openLink(event, this)">NTLite (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" onclick="openLink(event, this)">O&O Shutup 10 (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/obsidianmd/obsidian-releases/releases/download/v1.5.12/Obsidian.1.5.12.exe" onclick="openLink(event, this)">Obsidian (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://openhardwaremonitor.org/files/openhardwaremonitor-v0.9.6.zip" onclick="openLink(event, this)">Open Hardware Monitor</a>
+              </div>
+              <div class="file">
+                <a href="https://www.winitor.com/download2" onclick="openLink(event, this)">PeStudio (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://playnite.link/download/PlayniteInstaller.exe" onclick="openLink(event, this)">Playnite Launcher (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://updates.safing.io/latest/windows_amd64/packages/portmaster-installer.exe" onclick="openLink(event, this)">Portmaster (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/microsoft/PowerToys/releases/download/v0.81.1/PowerToysUserSetup-0.81.1-x64.exe" onclick="openLink(event, this)">PowerToys (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://download.sysinternals.com/files/ProcessExplorer.zip" onclick="openLink(event, this)">ProcessExplorer (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://sourceforge.net/projects/qbittorrent/files/qbittorrent-win32/qbittorrent-4.6.4/qbittorrent_4.6.4_x64_setup.exe/download" onclick="openLink(event, this)">qBittorrent (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/henrypp/simplewall/releases/download/v.3.8.2/simplewall-3.8.2-bin.zip" onclick="openLink(event, this)">SimpleWall (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/stefansundin/superf4/releases/download/v1.4/SuperF4-1.4-64bit.zip" onclick="openLink(event, this)">SuperF4 (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/ntdevlabs/tiny11builder/archive/refs/heads/main.zip" onclick="openLink(event, this)">Tiny11Builder</a>
+              </div>
+              <div class="file">
+                <a href="https://winaerotweaker.com/download/" onclick="openLink(event, this)">Winareo Tweaker (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/Sycnex/Windows10Debloater/archive/refs/heads/master.zip" onclick="openLink(event, this)">Windows10Debloater (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/sysprogs/WinCDEmu/releases/download/v4.1/WinCDEmu-4.1.exe" onclick="openLink(event, this)">WinCDEmu ISO (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-701.exe" onclick="openLink(event, this)">WinRAR (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://2.na.dl.wireshark.org/win64/WiresharkPortable64_4.2.5.paf.exe" onclick="openLink(event, this)">WireShark (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/HelloZeroNet/ZeroNet-win/archive/dist-win64/ZeroNet-py3-win64.zip" onclick="openLink(event, this)">ZeroNet (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="#" onclick="openLink(event, this)"></a>
+              </div>
+              <div class="file">
+                <a href="#" onclick="openLink(event, this)"></a>
+              </div>
+            </div>
+          </div>
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--OS's-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Operating Systems</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://nyc3.dl.elementary.io/download/MTcxNjk2MzI1NQ==/elementaryos-7.1-stable.20230926rc.iso" onclick="openLink(event, this)">ElementaryOS x64</a>
+              </div>
+              <div class="file">
+                <a href="https://releases.ubuntu.com/24.04/ubuntu-24.04-desktop-amd64.iso" onclick="openLink(event, this)">Ubuntu 24.04 x64</a>
+              </div>
+              <div class="file">
+                <a href="https://cdimage.kali.org/kali-2024.1/kali-linux-2024.1-installer-amd64.iso" onclick="openLink(event, this)">Kali x64</a>
+              </div>
+              <div class="file">
+                <a href="https://rockedge.org/kernels/data/ISO/Bookworm_Pup64/BookwormPup64_10.0.6.iso" onclick="openLink(event, this)">Puppy x64</a>
+              </div>
+              <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Tiny10's-->
+                <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Tiny10</span>
+                <div class="folder-content">
+                  <div class="file">
+                    <a href="https://archive.org/download/tiny-10-NTDEV/tiny10%2023h1%20x64.iso" onclick="openLink(event, this)">Tiny10 23H1 x64</a>
+                  </div>
+                  <div class="file">
+                    <a href="https://archive.org/download/tiny-10-NTDEV/tiny10%202303%20x86.iso" onclick="openLink(event, this)">Tiny10 2303 x86</a>
+                  </div>
+                  <div class="file">
+                    <a href="https://archive.org/download/tiny-10-NTDEV/tiny10%20x64%20beta%202.iso" onclick="openLink(event, this)">Tiny10 Beta2 22H2 x64</a>
+                  </div>
+                  <div class="file">
+                    <a href="https://archive.org/download/tiny-10-NTDEV/tiny10%20x86%20beta%202.iso" onclick="openLink(event, this)">Tiny10 Beta2 22H2 x86</a>
+                  </div>
+                  <div class="file">
+                    <a href="https://archive.org/download/tiny-10-NTDEV/tiny10_21H2_x64_beta_1.iso" onclick="openLink(event, this)">Tiny10 Beta1 22H2 x64</a>
+                  </div>
+                  <div class="file">
+                    <a href="https://archive.org/download/tiny-10-NTDEV/Tiny10%20B4%20x64.iso" onclick="openLink(event, this)">Tiny10 Beta4 1809 x64</a>
+                  </div>
+                  <div class="file">
+                    <a href="https://archive.org/download/tiny-10-NTDEV/Tiny10%20B2.iso" onclick="openLink(event, this)">Tiny10 Beta2 1809 x86</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Password Managers-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Password Managers</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://vault.bitwarden.com/download/?app=desktop&platform=windows" onclick="openLink(event, this)">BitWarden (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/buttercup/buttercup-desktop/releases/download/v2.27.0/Buttercup-win-x64-2.27.0-portable.exe" onclick="openLink(event, this)">Buttercup (Windows x64 Portable)</a>
+              </div>
+              <div class="file">
+                <a href="https://www.keepersecurity.com/desktop_electron/packages/KeeperPasswordManager.appinstaller" onclick="openLink(event, this)">Keeper (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://sourceforge.net/projects/keepass/files/KeePass%202.x/2.56/KeePass-2.56.zip/download" onclick="openLink(event, this)">KeyPass (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/keepassxreboot/keepassxc/releases/download/2.7.8/KeePassXC-2.7.8-Win64.msi" onclick="openLink(event, this)">KeePassXC (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="https://github.com/pwsafe/pwsafe/releases/download/3.65.1/pwsafe-3.65.1.exe" onclick="openLink(event, this)">Password Safe (Windows x64)</a>
+              </div>
+              <div class="file">
+                <a href="#" onclick="openLink(event, this)"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="folder" onclick="toggleFolder(this)"> <!--Utility-->
+        <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Utility</span>
+        <div class="folder-content">
+          <div class="file">
+            <a href="https://ww1.pythonanywhere.com/gencrypt" onclick="openLink(event, this)">Password Generator</a>
+          </div>
+          <div class="file">
+            <a href="https://ww1.pythonanywhere.com/crypto" onclick="openLink(event, this)">TradingView</a>
+          </div>
+          <div class="file">
+            <a href="http://10.0.0.1" onclick="openLink(event, this)">Router</a>
+          </div>
+          
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Security-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Security</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://getlinkinfo.com" onclick="openLink(event, this)">GetLinkInfo</a>
+              </div>
+              <div class="file">
+                <a href="https://urlscan.io" onclick="openLink(event, this)">Urlscan.io</a>
+              </div>
+              <div class="file">
+                <a href="https://www.virustotal.com/gui/home/upload" onclick="openLink(event, this)">VirusTotal</a>
+              </div>
+              <div class="file">
+                <a href="#" onclick="openLink(event, this)"></a>
+              </div>
+            </div>
+          </div>
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Speed Test-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Speed Test</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://speed.cloudflare.com/" onclick="openLink(event, this)">Cloudflare Speed Test</a>
+              </div>
+              <div class="file">
+                <a href="https://fast.com/" onclick="openLink(event, this)">Fast</a>
+              </div>
+              <div class="file">
+                <a href="https://www.google.com/search?q=speed+test" onclick="openLink(event, this)">Google Speed Test</a>
+              </div>
+              <div class="file">
+                <a href="https://www.highspeedinternet.com/tools/speed-test" onclick="openLink(event, this)">Highspeedinternet.com</a>
+              </div>
+              <div class="file">
+                <a href="https://www.speedtest.net/" onclick="openLink(event, this)">Speedtest.net</a>
+              </div>
+              <div class="file">
+                <a href="#" onclick="openLink(event, this)"></a>
+              </div>
+            </div>
+          </div>
+          <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Email-->
+            <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Temporary Email</span>
+            <div class="folder-content">
+              <div class="file">
+                <a href="https://temp-mail.org/en/" onclick="openLink(event, this)">Temp Mail</a>
+              </div>
+              <div class="file">
+                <a href="https://tempmailo.com" onclick="openLink(event, this)">TempMailo</a>
+              </div>
+              <div class="file">
+                <a href="https://tempail.com" onclick="openLink(event, this)">Tempail</a>
+              </div>
+              <div class="file">
+                <a href="https://temp-mail.io/en" onclick="openLink(event, this)">Temp-Mail.io</a>
+              </div>
+              <div class="file">
+                <a href="https://mail.tm/en/" onclick="openLink(event, this)">Mail.tm</a>
+              </div>
+              <div class="file">
+                <a href="#" onclick="openLink(event, this)"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleFolder(folder) {
+    var folderContent = folder.querySelector(".folder-content");
+    folderContent.style.display = (folderContent.style.display === "block") ? "none" : "block";
+    folder.classList.toggle('open'); // Toggle the 'open' class to show/hide the vertical line
+  }
+
+  function openLink(event, link) {
+    event.preventDefault();
+    window.open(link.href, '_blank');
+    event.stopPropagation(); // Prevents the click event from reaching the folder
+  }
+</script>
+
+</body>
+</html>
