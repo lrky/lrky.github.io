@@ -49,6 +49,7 @@
     padding-left: 20px;
     display: block;
     margin-bottom: 5px;
+    margin-top: 3px;
   }
   
   .file:hover {
@@ -150,9 +151,6 @@
                     </div>
                     <div class="file">
                       <a href="https://poketube.fun" onclick="openLink(event, this)">PokeTube Frontend</a>
-                    </div>
-                    <div class="file">
-                      <a href="#" onclick="openLink(event, this)"></a>
                     </div>
                   </div>
               </div>
@@ -264,9 +262,6 @@
             <div class="file">
               <a href="https://wowroms.com" onclick="openLink(event, this)">WowRoms</a>
             </div>
-            <div class="file">
-              <a href="#" onclick="openLink(event, this)"></a>
-            </div>
             
             
             <div class="file">
@@ -275,12 +270,12 @@
             <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Roms-->
               <i class="fas fa-folder"></i><span class="folder-name">&nbsp;ROMs</span>
               <div class="folder-content">
-                <div class="file">
-                  <a href="#" onclick="openLink(event, this)"></a>
-                </div>
                 <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--GameCube-->
                   <i class="fas fa-folder"></i><span class="folder-name">&nbsp;GameCube</span>
                   <div class="folder-content">
+                    <div class="file">
+                      <a href="https://romsfun.com/download/avatar-the-last-airbender-3-28177/1" onclick="openLink(event, this)">Avatar: The Last Airbender (USA)</a>
+                    </div>
                     <div class="file">
                       <a href="https://romsfun.com/download/batman-begins-6-92194/2" onclick="openLink(event, this)">Batman Begins (USA)</a>
                     </div>
@@ -322,6 +317,9 @@
                     </div>
                     <div class="file">
                       <a href="https://romsfun.com/download/need-for-speed-hot-pursuit-2-2-92762/2" onclick="openLink(event, this)">NFS: Hot Pursiut 2 (USA)</a>
+                    </div>
+                    <div class="file">
+                      <a href="https://romsfun.com/download/rampage-total-destruction-3-92870/1" onclick="openLink(event, this)">Rampage: Total Destruction</a>
                     </div>
                     <div class="file">
                       <a href="https://romsfun.com/download/spongebob-squarepants-battle-for-bikini-bottom-2-28405/3" onclick="openLink(event, this)">Spongebob: BFBB (USA)</a>
@@ -387,9 +385,6 @@
                       <a href="https://romsfun.com/download/x-men-legends-3-93160/7" onclick="openLink(event, this)">X-Men Legends II (USA)</a>
                     </div>
                   </div>
-                </div>
-                <div class="file">
-                  <a href="#" onclick="openLink(event, this)"></a>
                 </div>
               </div>
             </div>
@@ -544,12 +539,6 @@
               <div class="file">
                 <a href="https://github.com/HelloZeroNet/ZeroNet-win/archive/dist-win64/ZeroNet-py3-win64.zip" onclick="openLink(event, this)">ZeroNet (Windows x64)</a>
               </div>
-              <div class="file">
-                <a href="#" onclick="openLink(event, this)"></a>
-              </div>
-              <div class="file">
-                <a href="#" onclick="openLink(event, this)"></a>
-              </div>
             </div>
           </div>
           <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--OS's-->
@@ -616,9 +605,6 @@
               <div class="file">
                 <a href="https://github.com/pwsafe/pwsafe/releases/download/3.65.1/pwsafe-3.65.1.exe" onclick="openLink(event, this)">Password Safe (Windows x64)</a>
               </div>
-              <div class="file">
-                <a href="#" onclick="openLink(event, this)"></a>
-              </div>
             </div>
           </div>
         </div>
@@ -648,8 +634,33 @@
               <div class="file">
                 <a href="https://www.virustotal.com/gui/home/upload" onclick="openLink(event, this)">VirusTotal</a>
               </div>
-              <div class="file">
-                <a href="#" onclick="openLink(event, this)"></a>
+              <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Privacy-->
+                <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Privacy</span>
+                <div class="folder-content">
+                  <div class="file">
+                    <a href="https://tosdr.org" onclick="openLink(event, this)">ToS;DR</a>
+                  </div>
+                  <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Search Engines-->
+                    <i class="fas fa-folder"></i><span class="folder-name">&nbsp;Search Engines</span>
+                    <div class="folder-content">
+                      <div class="file">
+                        <a href="https://duckduckgo.com" onclick="openLink(event, this)">DuckDuckGo</a>
+                      </div>
+                      <div class="file">
+                        <a href="https://metager.org" onclick="openLink(event, this)">Metager</a>
+                      </div>
+                      <div class="file">
+                        <a href="https://www.qwant.com" onclick="openLink(event, this)">Qwant</a>
+                      </div>
+                      <div class="file">
+                        <a href="https://searx.space" onclick="openLink(event, this)">Searx</a>
+                      </div>
+                      <div class="file">
+                        <a href="https://www.startpage.com" onclick="openLink(event, this)">Startpage</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -671,9 +682,6 @@
               <div class="file">
                 <a href="https://www.speedtest.net/" onclick="openLink(event, this)">Speedtest.net</a>
               </div>
-              <div class="file">
-                <a href="#" onclick="openLink(event, this)"></a>
-              </div>
             </div>
           </div>
           <div class="folder" onclick="event.stopPropagation();toggleFolder(this);"> <!--Email-->
@@ -693,9 +701,6 @@
               </div>
               <div class="file">
                 <a href="https://mail.tm/en/" onclick="openLink(event, this)">Mail.tm</a>
-              </div>
-              <div class="file">
-                <a href="#" onclick="openLink(event, this)"></a>
               </div>
             </div>
           </div>
