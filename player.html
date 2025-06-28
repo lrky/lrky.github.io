@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Audio Player</title>
-  <link rel="icon" type="image/x-icon" href="img/ico-player.svg">
+  <link rel="icon" type="image/x-icon" href="/img/ico-player.svg">
   <style>
     body {
       background: #121212;
@@ -244,13 +244,13 @@
       <!-- CONTROLS: Centered, traditional layout -->
       <div class="player-controls-row">
         <div class="main-controls">
-          <button id="prevBtn"><img src="img/back.svg" alt="back"></button>
-          <button id="playPauseBtn"><img id="iconPlayPause" src="img/pause.svg" alt="play/pause"></button>
-          <button id="nextBtn"><img src="img/next.svg" alt="next"></button>
-          <button id="shuffleBtn"><img src="img/shuffle.svg" alt="shuffle"></button>
+          <button id="prevBtn"><img src="/img/back.svg" alt="back"></button>
+          <button id="playPauseBtn"><img id="iconPlayPause" src="/img/pause.svg" alt="play/pause"></button>
+          <button id="nextBtn"><img src="/img/next.svg" alt="next"></button>
+          <button id="shuffleBtn"><img src="/img/shuffle.svg" alt="shuffle"></button>
         </div>
         <div class="side-controls">
-          <button id="volumeIcon" aria-label="Mute/unmute" type="button"><img id="icoVol" src="img/vol-51-100.svg" alt="Volume > 51%"></button>
+          <button id="volumeIcon" aria-label="Mute/unmute" type="button"><img id="icoVol" src="/img/vol-51-100.svg" alt="Volume > 51%"></button>
           <input type="range" id="volumeSlider" min="0" max="100" value="100">
         </div>
       </div>
@@ -445,21 +445,21 @@
 
         renderFileList();
         nowPlaying.textContent = getDisplayName(files[idx].name);
-        playPauseBtn.src = 'img/pause.svg';
+        playPauseBtn.src = '/img/pause.svg';
         }
 
         // Play/Pause toggle
         playPauseBtn.onclick = function() {
         if (audio.paused) {
             audio.play();
-            iconPlayPause.src = 'img/pause.svg';
+            iconPlayPause.src = '/img/pause.svg';
         } else {
             audio.pause();
-            iconPlayPause.src = 'img/play.svg';
+            iconPlayPause.src = '/img/play.svg';
         }
         };
-        audio.onplay = () => iconPlayPause.src = 'img/pause.svg';
-        audio.onpause = () => iconPlayPause.src = 'img/play.svg';
+        audio.onplay = () => iconPlayPause.src = '/img/pause.svg';
+        audio.onpause = () => iconPlayPause.src = '/img/play.svg';
 
         function renderFileList() {
         fileList.innerHTML = '';
@@ -500,10 +500,10 @@
 
 
         function updateVolumeIcon(vol, muted = audio.muted) {
-        if (muted || vol === 0) icoVol.src = 'img/muted.svg';
-        else if (vol < 0.25) icoVol.src = "img/vol-1-25.svg";
-        else if (vol < 0.50) icoVol.src = "img/vol-26-50.svg";
-        else icoVol.src = "img/vol-51-100.svg";
+        if (muted || vol === 0) icoVol.src = '/img/muted.svg';
+        else if (vol < 0.25) icoVol.src = "/img/vol-1-25.svg";
+        else if (vol < 0.50) icoVol.src = "/img/vol-26-50.svg";
+        else icoVol.src = "/img/vol-51-100.svg";
         }
 
         volumeSlider.oninput = function() {
@@ -535,11 +535,11 @@
         if ('mediaSession' in navigator) {
         navigator.mediaSession.setActionHandler('play', () => {
             audio.play();
-            playPauseBtn.src = 'img/pause.svg';
+            playPauseBtn.src = '/img/pause.svg';
         });
         navigator.mediaSession.setActionHandler('pause', () => {
             audio.pause();
-            playPauseBtn.src = 'img/play.svg';
+            playPauseBtn.src = '/img/play.svg';
         });
         navigator.mediaSession.setActionHandler('previoustrack', () => {
             if (currentIndex > 0) playTrack(currentIndex - 1);
@@ -566,10 +566,10 @@
         if (!audio.src) return;
         if (audio.paused) {
             audio.play();
-            playPauseBtn.src = 'img/pause.svg';
+            playPauseBtn.src = '/img/pause.svg';
         } else {
             audio.pause();
-            playPauseBtn.src = 'img/play.svg';
+            playPauseBtn.src = '/img/play.svg';
         }
         };
         prevBtn.onclick = function() {
