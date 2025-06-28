@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Audio Player</title>
+  <link rel="icon" type="image/x-icon" href="img/ico-player.svg">
+  <style>
+    body {
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      margin-top: 40px;
+      background: #1e1e1e;
+      border-radius: 1rem;
+      padding: 2rem 2rem 1rem 2rem;
+      width: 650px;
+      max-width: 98vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px solid transparent;
+      position: relative;
+    }
+    h1 {
+      margin-top: -23px;
+      /* margin-left: -17px; */
+      /* font-size: 2rem;
+      letter-spacing: 2px; */
+      color: #e0e0e0;
+      text-align: center;
+      user-select: none;
+    }
+    #nowPlaying {
+      margin: 0.5rem 0 0.8rem 0;
+      text-align: center;
+      color: #e0e0e0;
+      font-weight: bold;
+      font-size: 1.1rem;
+      min-height: 24px;
+      width: 100%;
+    }
+    #fileList {
+      max-height: 180px;
+      overflow-y: auto;
+      margin: 0.5rem 0 0.7rem 0;
+      background: #2a2a2a;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      width: 100%;
+      scrollbar-width: thin;            /* Firefox */
+      scrollbar-color: #1095c1 #23252b; /* Firefox */
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.3rem;
+      margin-bottom: 0.2rem;
+      transition: background 0.2s;
+    }
+    .file-item span {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    }
+    .file-item.selected {
+        background: #1095c1;
+    }
+    .file-item:hover {
+      background: #08769b;
+      color: #e0e0e0;
+    }
+    .remove-btn {
+    margin-left: 0.7em;
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 1.3em;
+    cursor: pointer;
+    vertical-align: middle;
+    padding: 0 0.2em;
+    border-radius: 3px;
+    /* transition: background 0.15s; */
+    }
+    .remove-btn:hover {
+    /* background: #2a2a2a; */
+    color: #ff3737;
+    }
+    #seekbar {
+      width: 666px;
+      margin: 0.6rem 0 0.6rem 0;
+      accent-color: #1095c1;
+      background: #23252b;
+      height: 2px;
+      border-radius: 2px;
+    }
+    /* --- Controls: traditional player style --- */
+    .player-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      /* gap: 1.5rem; */
+      /* margin: 0.7rem 0 0.5rem 0; */
+    }
+    .main-controls {
+      display: flex;
+      align-items: center;
+      justify-content: right;
+      background: #1e1e1e;
+      /* gap: 0.5rem; */
+      flex: 1;
+    }
+    .side-controls {
+      display: flex;
+      align-items: center;
+      /* gap: 0.51rem; */
+    }
+    .player-controls-row .main-controls {
+      flex: 2;
+      /* justify-content: center; */
+    }
+    .player-controls-row button {
+    background: #1e1e1e;
+    border: none;
+    color: #1095c1;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+    .player-controls-row button img,
+    #volumeIcon img {
+    transition: transform 0.18s cubic-bezier(.42,0,.58,1);
+    }
+    .player-controls-row button:hover img,
+    #volumeIcon:hover img {
+    transform: scale(1.17);
+    }
+    .player-controls-row button img {
+    width: 38px;   /* or whatever size you want, e.g. 22px */
+    height: 38px;
+    vertical-align: middle;
+    }
+    .controls img, #volumeIcon img {
+      width: 38px;
+      height: 38px;
+      vertical-align: middle;
+    }
+    #volumeIcon button {
+      padding-left: 10px;
+      vertical-align: middle;
+    }
+    #volumeIcon {
+      background: none;
+      border: none;
+      color: #1095c1;
+      font-size: 1.3rem;
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+      padding: 0;
+      margin: 0;
+      margin-bottom: 0px;
+      width: 2.6em;
+      min-width: 2.6em;
+      display: inline-block;
+      text-align: center;
+    }
+    #volumeSlider {
+      width: 120px;
+      max-width: 200px;
+      margin-left: 0.451rem;
+      accent-color: #1095c1;
+      background: #23252b;
+      height: 2px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+    /* --- Browse buttons at bottom --- */
+    .picker-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
+      margin-top: 1.5rem;
+      margin-bottom: 0.3rem;
+      transition: 0.3s opacity;
+    }
+    .picker-btn {
+      padding: 10px 20px;
+      background: #1095c1;
+      color: #e0e0e0;
+      border: none;
+      border-radius: 0.6rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .picker-btn:hover {
+      background: #08769b;
+    }
+    #fileInput {
+      display: none;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 1rem; width: 100vw; border-radius: 0; }
+      .player-controls-row { gap: 0.5rem; }
+      #volumeSlider { width: 70px; }
+    }
+    @media (max-width: 480px) {
+      .container { width: 99vw; }
+      #volumeSlider { width: 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Audio Player</h1>
+    <div id="spinnerOverlay" style="display:none">
+        <div>
+            <div class="spinner"></div>
+            <div class="spinner-text" id="spinnerText">Loading audio files...</div>
+        </div>
+    </div>
+    <div id="playerSection" style="display: none; width: 100%;">
+      <div id="nowPlaying"></div>
+      <div id="fileList"></div>
+      <input type="range" id="seekbar" value="0" min="0" max="100" />
+      <!-- CONTROLS: Centered, traditional layout -->
+      <div class="player-controls-row">
+        <div class="main-controls">
+          <button id="prevBtn"><img src="img/back.svg" alt="back"></button>
+          <button id="playPauseBtn"><img id="iconPlayPause" src="img/pause.svg" alt="play/pause"></button>
+          <button id="nextBtn"><img src="img/next.svg" alt="next"></button>
+          <button id="shuffleBtn"><img src="img/shuffle.svg" alt="shuffle"></button>
+        </div>
+        <div class="side-controls">
+          <button id="volumeIcon" aria-label="Mute/unmute" type="button"><img id="icoVol" src="img/vol-51-100.svg" alt="Volume > 51%"></button>
+          <input type="range" id="volumeSlider" min="0" max="100" value="100">
+        </div>
+      </div>
+    </div>
+    <!-- Browse buttons always at the bottom -->
+    <div class="picker-row" id="browseRow">
+      <button class="picker-btn" id="chooseFiles">Browse Files</button>
+      <button class="picker-btn" id="pickFolder">Browse Folders</button>
+      <input type="file" id="fileInput" multiple accept="audio/*">
+      <input type="file" id="folderInput" style="display:none" webkitdirectory directory multiple>
+    </div>
+    <audio id="audio" preload="auto"></audio>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // State
+        let files = [];
+        let currentIndex = -1;
+        let audioURLs = [];
+        let folderHandle = null;
+        let lastVolume = 1.0;
+
+        const audio = document.getElementById('audio');
+        const fileList = document.getElementById('fileList');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const iconPlayPause = document.getElementById('iconPlayPause');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const pickFolder = document.getElementById('pickFolder');
+        const folderInput = document.getElementById('folderInput');
+        const chooseFiles = document.getElementById('chooseFiles');
+        const fileInput = document.getElementById('fileInput');
+        const nowPlaying = document.getElementById('nowPlaying');
+        const seekbar = document.getElementById('seekbar');
+        const playerSection = document.getElementById('playerSection');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const icoVol = document.getElementById('icoVol');
+        const spinnerOverlay = document.getElementById('spinnerOverlay');
+        const spinnerText = document.getElementById('spinnerText');
+
+        function isAudioFile(name) {
+        return /\.(mp3|wav|ogg|flac|m4a|aac|webm)$/i.test(name);
+        }
+
+        function getDisplayName(filename) {
+        let name = filename.split('/').pop().split('\\').pop();
+        return name.replace(/\.[^/.]+$/, "");
+        }
+
+        function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        }
+
+        function showPlayerSection() {
+        playerSection.style.display = (files.length > 0) ? '' : 'none';
+        }
+
+        // Recursive directory scan for FileSystemDirectoryHandle (Folder Picker)
+        async function scanDirectory(handle, filesOut, pathPrefix = "") {
+        for await (const [name, entry] of handle.entries()) {
+            if (entry.kind === "file" && isAudioFile(name)) {
+            filesOut.push({name: pathPrefix + name, handle: entry, isFileHandle: true});
+            } else if (entry.kind === "directory") {
+            await scanDirectory(entry, filesOut, pathPrefix + name + "/");
+            }
+        }
+        }
+
+        pickFolder.onclick = async () => {
+        if (!!window.showDirectoryPicker) {
+            // Chromium: use API
+            try {
+                folderHandle = await window.showDirectoryPicker();
+                spinnerOverlay.classList.add("active");
+                spinnerText.textContent = "Loading audio files...";
+                const wasEmpty = files.length === 0;
+                const foundFiles = [];
+                await scanDirectory(folderHandle, foundFiles);
+
+                // Prevent duplicates
+                const newFiles = foundFiles.filter(f => !files.some(existing => existing.name === f.name));
+
+                spinnerOverlay.classList.remove("active");
+
+                if (newFiles.length === 0) {
+                    fileList.innerHTML = `<div style="color:#f66;text-align:center;">No audio files found in folder or subfolders.</div>`;
+                    nowPlaying.textContent = "";
+                    audio.pause();
+                    currentIndex = -1;
+                    showPlayerSection();
+                    return;
+                }
+                
+                files = files.concat(newFiles); // Append
+                files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+                showPlayerSection();
+                renderFileList();
+                if (wasEmpty && files.length > 0) playTrack(0);
+        } catch (e) {
+            spinnerOverlay.classList.remove("active");
+            if (e.name !== "AbortError") alert('Error accessing folder: ' + e.message);
+        }
+        } else {
+            // Fallback: use webkit
+            folderInput.click();
+
+            folderInput.onchange = function(e) {
+            const fileList = Array.from(folderInput.files);
+            const wasEmpty = files.length === 0;
+            // fileList will include files from all subfolders, with .webkitRelativePath
+            const foundFiles = [];
+            // Prevent duplicates
+            const newFiles = foundFiles.filter(f => !files.some(existing => existing.name === f.name));
+            fileList.forEach(file => {
+                if (isAudioFile(file.name)) {
+                    if (!files.some(f => f.name === (file.webkitRelativePath || file.name))) {
+                    newFiles.push({
+                    name: file.webkitRelativePath || file.name,
+                    fileObj: file,
+                    isFileHandle: false
+                    });
+                    }
+                }
+            });
+            // sort, show, and play
+            if (newFiles.length > 0) {
+                files = files.concat(newFiles); // Append
+                files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+                showPlayerSection();
+                renderFileList();
+                if (wasEmpty) playTrack(0);
+                }
+            };
+        }
+        };
+        
+
+        function openFilePicker() {
+        fileInput.value = "";
+        fileInput.click();
+        }
+        fileInput.onchange = function(e) {
+        const wasEmpty = files.length === 0;
+        const newFiles = [];
+        folderHandle = null;
+        for (const file of Array.from(fileInput.files)) {
+            if (isAudioFile(file.name)) {
+                // Prevent duplicates by full name
+                if (!files.some(f => f.name === file.name)) {
+                    files.push({name: file.name, fileObj: file, isFileHandle: false});
+                }
+            //   files.push({name: file.name, fileObj: file, isFileHandle: false});
+            }
+        }
+        if (files.length === 0) {
+            fileList.innerHTML = `<div style="color:#f66;text-align:center;">No audio files selected.</div>`;
+            nowPlaying.textContent = "";
+            audio.pause();
+            currentIndex = -1;
+            showPlayerSection();
+            return;
+        }
+        files = files.concat(newFiles);
+        files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+        showPlayerSection();
+        renderFileList();
+        if (wasEmpty && files.length > 0) playTrack(0);
+        };
+
+        async function playTrack(idx) {
+        if (idx < 0 || idx >= files.length) return;
+        currentIndex = idx;
+
+        audioURLs.forEach(u => URL.revokeObjectURL(u));
+        audioURLs = [];
+
+        let file, url;
+        if (files[idx].isFileHandle) {
+            file = await files[idx].handle.getFile();
+        } else {
+            file = files[idx].fileObj;
+        }
+        url = URL.createObjectURL(file);
+        audio.src = url;
+        audioURLs.push(url);
+        audio.play();
+
+        renderFileList();
+        nowPlaying.textContent = getDisplayName(files[idx].name);
+        playPauseBtn.src = 'img/pause.svg';
+        }
+
+        // Play/Pause toggle
+        playPauseBtn.onclick = function() {
+        if (audio.paused) {
+            audio.play();
+            iconPlayPause.src = 'img/pause.svg';
+        } else {
+            audio.pause();
+            iconPlayPause.src = 'img/play.svg';
+        }
+        };
+        audio.onplay = () => iconPlayPause.src = 'img/pause.svg';
+        audio.onpause = () => iconPlayPause.src = 'img/play.svg';
+
+        function renderFileList() {
+        fileList.innerHTML = '';
+        files.forEach((file, i) => {
+            const div = document.createElement('div');
+            div.className = 'file-item' + (i === currentIndex ? ' selected' : '');
+
+            // File name span
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = getDisplayName(file.name);
+            nameSpan.style.cursor = "pointer";
+            nameSpan.onclick = () => playTrack(i);
+
+            // Remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '✕';
+            removeBtn.className = 'remove-btn';
+            // removeBtn.title = "Remove file";
+            removeBtn.onclick = (e) => {
+            e.stopPropagation();
+            files.splice(i, 1);
+            if (currentIndex >= files.length) currentIndex = files.length - 1;
+            renderFileList();
+            if (files.length === 0) {
+                audio.pause();
+                nowPlaying.textContent = "";
+                playerSection.style.display = "none";
+            } else if (i === currentIndex) {
+                playTrack(currentIndex);
+            }
+            };
+
+            div.appendChild(nameSpan);
+            div.appendChild(removeBtn);
+            fileList.appendChild(div);
+        });
+        }
+
+
+        function updateVolumeIcon(vol, muted = audio.muted) {
+        if (muted || vol === 0) icoVol.src = 'img/muted.svg';
+        else if (vol < 0.25) icoVol.src = "img/vol-1-25.svg";
+        else if (vol < 0.50) icoVol.src = "img/vol-26-50.svg";
+        else icoVol.src = "img/vol-51-100.svg";
+        }
+
+        volumeSlider.oninput = function() {
+        let v = volumeSlider.value / 100;
+        audio.volume = v;
+        audio.muted = (v === 0); // Optionally, treat 0 as muted.
+        if (!audio.muted && v > 0) lastVolume = v;
+        updateVolumeIcon(v, audio.muted);
+        };
+
+        audio.volume = 1.0;
+
+        volumeIcon.onclick = function() {
+        // Toggle mute
+        if (audio.muted || audio.volume === 0) {
+            audio.muted = false;
+            audio.volume = lastVolume > 0 ? lastVolume : 1.0;
+            volumeSlider.value = Math.round(audio.volume * 100);
+        } else {
+            audio.muted = true;
+            lastVolume = audio.volume;
+            audio.volume = 0;
+            volumeSlider.value = 0;
+        }
+        updateVolumeIcon(audio.volume, audio.muted);
+        };
+
+        // Media Session API for hardware multimedia keys
+        if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', () => {
+            audio.play();
+            playPauseBtn.src = 'img/pause.svg';
+        });
+        navigator.mediaSession.setActionHandler('pause', () => {
+            audio.pause();
+            playPauseBtn.src = 'img/play.svg';
+        });
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+            if (currentIndex > 0) playTrack(currentIndex - 1);
+        });
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+            if (currentIndex < files.length - 1) playTrack(currentIndex + 1);
+        });
+
+        // Optional: show title and artist in OS media overlay
+        function updateMediaSessionMeta() {
+            if (!files.length) return;
+            navigator.mediaSession.metadata = new MediaMetadata({
+            title: files[currentIndex]?.name || "Unknown Track",
+            artist: "MooSync Web Player"
+            });
+        }
+
+        audio.addEventListener('play', updateMediaSessionMeta);
+        audio.addEventListener('ended', updateMediaSessionMeta);
+        audio.addEventListener('pause', updateMediaSessionMeta);
+        }
+
+        playPauseBtn.onclick = function() {
+        if (!audio.src) return;
+        if (audio.paused) {
+            audio.play();
+            playPauseBtn.src = 'img/pause.svg';
+        } else {
+            audio.pause();
+            playPauseBtn.src = 'img/play.svg';
+        }
+        };
+        prevBtn.onclick = function() {
+        if (currentIndex > 0) playTrack(currentIndex - 1);
+        };
+        nextBtn.onclick = function() {
+        if (currentIndex < files.length - 1) playTrack(currentIndex + 1);
+        };
+
+        audio.onended = function() {
+        if (currentIndex < files.length - 1) {
+            playTrack(currentIndex + 1);
+        } else {
+            // End of list: shuffle and play from top!
+            shuffleArray(files);
+            currentIndex = 0;
+            renderFileList();
+            playTrack(0);
+        }
+        };
+
+        audio.ontimeupdate = function() {
+        if (audio.duration) {
+            seekbar.max = Math.floor(audio.duration);
+            seekbar.value = Math.floor(audio.currentTime);
+        }
+        };
+        seekbar.oninput = function() {
+        if (audio.duration) audio.currentTime = seekbar.value;
+        };
+
+        shuffleBtn.onclick = function() {
+        if (files.length <= 1) return;
+        const currentFile = files[currentIndex];
+        shuffleArray(files);
+        let newIdx = files.findIndex(f => f.name === currentFile.name);
+        if (newIdx === -1) newIdx = 0;
+        currentIndex = newIdx;
+        renderFileList();
+        };
+
+        chooseFiles.onclick = openFilePicker;
+
+        showPlayerSection();
+    });
+  </script>
+</body>
+</html>
