@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>browserPGP | Key Generator</title>
+    <meta name="description" content="Generate PGP keys in browser, simple and secure." />
+    <meta name="keywords" content="browserPGP,PGP,OpenPGP,online,browser,javascript,github,live,secure,key generator,key gen,encrypt,decrypt,sign,verify,signature">
+    <link rel="icon" type='image/png' sizes='256x256' href="img/256.png"/>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="dark.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/copy.js"></script>
+    <script src="js/prngCheck.js"></script>
+    <script src="js/favicon.js"></script>
+    <script src="js/sha1.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/openpgp.min.js"></script>
+    <script>
+      async function encryptDecryptFunction() {
+        document.getElementById("progressbar").className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const name = document.getElementById("name").value || '';
+          const email = document.getElementById("email").value || '';
+          const pass = document.getElementById("pass").value || '';
+          const rsaBits = 4096;
+          const { privateKey, publicKey }
+      = await pgpClient.generateKey({ name, email, passphrase: pass, type: 'rsa', rsaBits });
+          document.getElementById("privkey").value = privateKey;
+          document.getElementById("pubkey").value = publicKey;
+          document.getElementById("progressbar").className = "progress-bar bg-success";
+        } catch (err) {
+          const msg = (err && err.message) ? err.message : String(err);
+          document.getElementById("pubkey").value = msg;
+          document.getElementById("privkey").value = msg;
+          document.getElementById("progressbar").className = "progress-bar bg-danger";
+        }
+      };
+    </script>
+    <style>
+    html, body {
+      height: 95%;
+    }
+    div.main {
+      padding:20px;
+      height: 100%;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-container"></div>
+    <div class="main">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Name</label>
+              <input type="text" class="form-control" id="name" placeholder="Enter name">
+              <small class="form-text text-muted">Will be implemented in PGP keys.</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter email">
+              <small class="form-text text-muted">Will be implemented in PGP keys.</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Passphrase (optional)</label>
+              <input type="password" class="form-control" id="pass" placeholder="Enter passphrase">
+              <small class="form-text text-muted">Protects your keys. Needs to be secure.</small>
+            </div>
+            <div class="form-group progress">
+              <div class="progress-bar" role="progressbar" id="progressbar" style="width: 100%"></div>
+            </div>
+            <small id="emailHelp" class="form-text text-danger">This may take some time and cause browser lag.</small>
+            <br>
+            <div class="form-group">
+              <button type="button" onclick="encryptDecryptFunction()" class="btn btn-primary">Generate</button>
+            </div>
+            <div id="collapseExample">
+              <div class="card card-body">
+                This tool generates a 4096 bit RSA pair of PGP keys. The private key should be backed up in a secure private way. The public key can be shared publicly. These keys can be used for signing, encrypting, and decrypting texts, e-mails, files and directories.
+              </div>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">PGP Private Key <a class="text-danger">do not share! (gives complete control of PGP)</a></label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" placeholder="-----BEGIN PGP PRIVATE KEY BLOCK-----" id="privkey" readonly></textarea>
+              <button type="button" style="margin-top: 1rem;" class="btn btn-primary" data-copy="#privkey">Copy</button>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">PGP Public Key <a class="text-success">share this one.</a></label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" placeholder="-----BEGIN PGP PUBLIC KEY BLOCK-----" id="pubkey" readonly></textarea>
+              <button type="button" style="margin-top: 1rem;" class="btn btn-primary" data-copy="#pubkey">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      async function encryptDecryptFunction() {
+        const bar = document.getElementById("progressbar");
+        bar.className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const name = document.getElementById("name").value || '';
+          const email = document.getElementById("email").value || '';
+          const pass = document.getElementById("pass").value || '';
+          const { privateKey, publicKey } = await openpgp.generateKey({
+            type: 'rsa', rsaBits: 4096, userIDs: [{ name, email }], passphrase: pass
+          });
+          document.getElementById("privkey").value = privateKey;
+          document.getElementById("pubkey").value = publicKey;
+          bar.className = "progress-bar bg-success";
+        } catch (err) {
+          const msg = (err && err.message) ? err.message : String(err);
+          document.getElementById("pubkey").value = msg;
+          document.getElementById("privkey").value = msg;
+          bar.className = "progress-bar bg-danger";
+        }
+      }
+    </script>
+    <script>
+      (function(){
+        try {
+          if (location.protocol === 'file:') {
+            console.warn('[browserPGP] This page is opened via file://. Some browsers disable WebCrypto in this mode. Prefer http://localhost or HTTPS.');
+          }
+        } catch(_) {}
+      })();
+    </script>
+  </body>
+</html>

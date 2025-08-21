@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>browserPGP | Sign</title>
+    <meta name="description" content="Sign PGP in browser, simple and secure." />
+    <meta name="keywords" content="browserPGP,PGP,OpenPGP,online,browser,javascript,github,live,secure,key generator,key gen,encrypt,decrypt,sign,verify,signature">
+    <link rel="icon" type='image/png' sizes='256x256' href="img/256.png"/>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="dark.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/copy.js"></script>
+    <script src="js/prngCheck.js"></script>
+    <script src="js/favicon.js"></script>
+    <script src="js/sha1.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/openpgp.min.js"></script>
+    <script>
+      async function encryptDecryptFunction() {
+        const bar = document.getElementById("progressbar");
+        bar.className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const privKeyArmored = document.getElementById("privKey").value;
+          const pass = document.getElementById("pass").value;
+          const text = document.getElementById("msg").value;  // <-- use 'msg'
+
+          const privateKey = await openpgp.readPrivateKey({ armoredKey: privKeyArmored });
+          const signingKeys = pass ? await openpgp.decryptKey({ privateKey, passphrase: pass }) : privateKey;
+
+          // Cleartext-signed message (-----BEGIN PGP SIGNED MESSAGE----- ...)
+          const cleartext = await openpgp.createCleartextMessage({ text });
+          const signed = await openpgp.sign({ message: cleartext, signingKeys });
+
+          document.getElementById("result").value = signed; // armored cleartext block
+          bar.className = "progress-bar bg-success";
+        } catch (err) {
+          document.getElementById("result").value = String(err?.message || err);
+          bar.className = "progress-bar bg-danger";
+        }
+    }
+    </script>
+    <style>
+    html, body {
+      height: 95%;
+    }
+    div.main {
+      padding:20px;
+      height: 100%;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-container"></div>
+    <div class="main">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Message</label>
+              <textarea class="form-control" rows="6" id="msg" placeholder="Message to be signed. Don't sign anything vague as it could be used by someone to pretend to be you, include dates and specifics."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">PGP Private key</label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" id="privKey" placeholder="-----BEGIN PGP PRIVATE KEY BLOCK-----"></textarea>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Passphrase (required)</label>
+              <input type="password" class="form-control" id="pass" placeholder="Enter passphrase">
+            </div>
+            <div class="form-group progress">
+              <div class="progress-bar" role="progressbar" id="progressbar" style="width: 100%"></div>
+            </div>
+            <button type="button" onclick="encryptDecryptFunction()" class="btn btn-primary">Sign</button>
+          </div>
+          <div class="col-sm" style="height:100%;">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">PGP Message</label>
+              <textarea class="form-control" style="font-size: 10px;" rows="20" placeholder="-----BEGIN PGP SIGNED MESSAGE-----" id="result" readonly></textarea>
+              <button type="button" style="margin-top: 1rem;" class="btn btn-primary" data-copy="#result">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function(){
+        try {
+          if (location.protocol === 'file:') {
+            console.warn('[browserPGP] This page is opened via file://. Some browsers disable WebCrypto in this mode. Prefer http://localhost or HTTPS.');
+          }
+        } catch(_) {}
+      })();
+    </script>
+  </body>
+</html>

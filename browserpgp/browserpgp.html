@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <title>browserPGP</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="PGP in browser, simple and secure." />
+    <meta name="keywords" content="browserPGP,PGP,OpenPGP,online,browser,javascript,github,live,secure,key generator,key gen,encrypt,decrypt,sign,verify,signature">
+    <link rel="icon" type='image/png' sizes='256x256' href="img/256.png"/>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="dark.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/favicon.js"></script>
+    <script src="js/sha1.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/baffle.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/openpgp.min.js"></script>
+    <style>
+    html, body {
+      height: 95%;
+    }
+    div.main {
+      padding:20px;
+      height: 100%;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-container"></div>
+    <div class="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            <h1 class="display-4">browserPGP</h1>
+            <p>A website that makes using PGP simple and secure. All work is done client side, so no private data leaves your computer. The JavaScript OpenPGP library used is maintained by <a href="https://protonmail.com/blog/openpgpjs-email-encryption/" target="_blank">ProtonMail</a>.<br><br>If you want to be extra secure, download the site files <a href="https://github.com/lrky/browserPGP.github.io/archive/master.zip">here</a>, extract them, disable your internet and open index.html.</p>
+            <h1 class="display-4" style="font-size: 2.4rem;">Compatibility Check</h1>
+            <a>browserPGP requires a modern web browser with the cutting edge support for WebCrypto (PRNG). This page will automatically check your browser to see if browserPGP will work.</a>
+            <br><br>
+            <div id="worksCheckVer"></div>
+            <div id="success"></div>
+            <noscript><div class="alert alert-danger" role="alert">You don't have the requirements to use browserPGP on this device / in this web browser.</div><br></noscript>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <div id="jsCheck"><span class="badge badge-pill badge-danger">Unavailable.</span></div>
+                <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">javascript</a>
+              </li>
+              <li class="list-group-item">
+                <div id="prngCheck"><span class="badge badge-pill badge-danger">Unavailable.</span></div>
+                <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto">prng (pseudo random number generator)</a>
+              </li>
+            </ul>
+            <div id="worksCheck"></div>
+            <noscript><br><div class="alert alert-danger" role="alert">This website requires JavaScript to function, please enable it.</div></noscript>
+          </div>
+          <div class="col-sm">
+            <img class="img-fluid" style="background-color: #565f69;" src="img/pgp.png">
+            <p class="text-center text-muted"><small>PGP encrypt/decrypt diagram</small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        const el = document.getElementById('worksCheckVer');
+
+        // Is OpenPGP.js loaded and are core APIs present?
+        const openpgpLoaded = !!(window.openpgp && typeof openpgp.readKey === 'function');
+
+        const versionLabel = openpgp?.config?.versionString || 'OpenPGP.js';
+
+        if (openpgpLoaded) {
+          el.insertAdjacentHTML(
+            'beforeend',
+            `<div class="alert alert-success" role="alert">
+              ${versionLabel} works in this browser!
+            </div>`
+          );
+        } else {
+          el.insertAdjacentHTML(
+            'beforeend',
+            `<div class="alert alert-danger" role="alert">
+              OpenPGP.js won't start in this browser. Do a
+              <a href="/compatibility.html">compatibility check.</a>
+            </div>`
+          );
+        }
+      });
+    </script>
+    <script>
+      document.getElementById("jsCheck").innerHTML = '<span class="badge badge-pill badge-success">Available!</span>';
+      function isGoodPrngAvailable(){return!("undefined"==typeof window||!window.crypto||!window.crypto.getRandomValues)||"undefined"!=typeof window&&"object"==typeof window.msCrypto&&"function"==typeof window.msCrypto.getRandomValues}
+      if (isGoodPrngAvailable()) {
+        document.getElementById("prngCheck").innerHTML = '<span class="badge badge-pill badge-success">Available!</span>';
+        document.getElementById('success').insertAdjacentHTML('beforeend', '<div class="alert alert-success" role="alert">You have all the requirements to use browserPGP on this device / in this web browser.</div><br>');
+      } else {
+        document.getElementById('success').insertAdjacentHTML('beforeend', '<div class="alert alert-danger" role="alert">You don\'t have the requirements to use browserPGP on this device / in this web browser.</div><br>');
+      }
+    </script>
+    <script>
+        (function(){
+          try {
+            if (location.protocol === 'file:') {
+              console.warn('[browserPGP] This page is opened via file://. Some browsers disable WebCrypto in this mode. Prefer http://localhost or HTTPS.');
+            }
+          } catch(_) {}
+        })();
+    </script>
+  </body>
+</html>
