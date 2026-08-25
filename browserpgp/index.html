@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>browserPGP</title>
@@ -8,12 +9,17 @@
     <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="dark.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Core Scripts -->
     <script src="js/favicon.js"></script>
     <script src="js/sha1.min.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/baffle.min.js"></script>
     <script src="js/openpgp.min.js"></script>
+    <script src="js/copy.js"></script>
+    <script src="js/prngCheck.js"></script>
+
     <style>
     html, body {
       height: 95%;
@@ -22,11 +28,23 @@
       padding:20px;
       height: 100%;
     }
+    /* SPA Section Visibility */
+    .content-section {
+      display: none;
+    }
+    .content-section.active {
+      display: block;
+    }
+    /* PGP Page Specific Styles */
+    .section-divider { margin: 1.25rem 0 1.75rem; border-top: 1px solid rgba(255,255,255,.1); }
+    .block-label { font-weight: 600; margin-bottom: .25rem; }
+    .mini-hint { font-size: 12px; opacity: .8; }
     </style>
   </head>
   <body>
+    <!-- Main Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">
+      <a class="navbar-brand">
         <img src="img/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="">
         browserPGP
       </a>
@@ -36,15 +54,19 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="index.html">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="generate.html">Key Generator</a></li>
-          <li class="nav-item active"><a class="nav-link" href="pgp.html">Encrypt / Decrypt</a></li>
-          <li class="nav-item"><a class="nav-link" href="sign.html">Sign</a></li>
-          <li class="nav-item"><a class="nav-link" href="verify.html">Verify</a></li>
+          <li class="nav-item active"><a class="nav-link" href="" data-section="about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="" data-section="generate">Key Generator</a></li>
+          <li class="nav-item"><a class="nav-link" href="" data-section="pgp">Encrypt / Decrypt</a></li>
+          <li class="nav-item"><a class="nav-link" href="" data-section="sign">Sign</a></li>
+          <li class="nav-item"><a class="nav-link" href="" data-section="verify">Verify</a></li>
         </ul>
       </div>
     </nav>
-    <div class="main">
+
+    <!-- ========================================== -->
+    <!-- ABOUT SECTION                              -->
+    <!-- ========================================== -->
+    <div id="section-about" class="content-section active main">
       <div class="container">
         <div class="row">
           <div class="col-sm">
@@ -77,51 +99,378 @@
         </div>
       </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- GENERATE SECTION                           -->
+    <!-- ========================================== -->
+    <div id="section-generate" class="content-section main">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="name_gen">Name</label>
+              <input type="text" class="form-control" id="name_gen" placeholder="Enter name">
+              <small class="form-text text-muted">Will be implemented in PGP keys.</small>
+            </div>
+            <div class="form-group">
+              <label for="email_gen">Email address</label>
+              <input type="email" class="form-control" id="email_gen" placeholder="Enter email">
+              <small class="form-text text-muted">Will be implemented in PGP keys.</small>
+            </div>
+            <div class="form-group">
+              <label for="pass_gen">Passphrase (optional)</label>
+              <input type="password" class="form-control" id="pass_gen" placeholder="Enter passphrase">
+              <small class="form-text text-muted">Protects your keys. Needs to be secure.</small>
+            </div>
+            <div class="form-group progress">
+              <div class="progress-bar" role="progressbar" id="progressbar_gen" style="width: 100%"></div>
+            </div>
+            <small id="emailHelp" class="form-text text-danger">This may take some time and cause browser lag.</small>
+            <br>
+            <div class="form-group">
+              <button type="button" onclick="generateKeyFunction()" class="btn btn-primary">Generate</button>
+            </div>
+            <div id="collapseExample">
+              <div class="card card-body">
+                This tool generates a 4096 bit RSA pair of PGP keys. The private key should be backed up in a secure private way. The public key can be shared publicly. These keys can be used for signing, encrypting, and decrypting texts, e-mails, files and directories.
+              </div>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="privkey_gen">PGP Private Key <a class="text-danger">do not share! (gives complete control of PGP)</a></label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" placeholder="-----BEGIN PGP PRIVATE KEY BLOCK-----" id="privkey_gen" readonly></textarea>
+              <button type="button" style="margin-top: 1rem;" class="btn btn-primary" data-copy="#privkey_gen">Copy</button>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="pubkey_gen">PGP Public Key <a class="text-success">share this one.</a></label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" placeholder="-----BEGIN PGP PUBLIC KEY BLOCK-----" id="pubkey_gen" readonly></textarea>
+              <button type="button" style="margin-top: 1rem;" class="btn btn-primary" data-copy="#pubkey_gen">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ENCRYPT / DECRYPT SECTION                  -->
+    <!-- ========================================== -->
+    <div id="section-pgp" class="content-section main container-fluid">
+      <!-- Row: ENCRYPT -->
+      <div class="row">
+        <div class="col-12">
+          <h5>Encrypt</h5>
+          <div class="mini-hint">Provide a recipient public key and your plaintext. Output is an armored PGP message.</div>
+          <div class="section-divider"></div>
+        </div>
+
+        <div class="col-sm">
+          <div class="form-group">
+            <label class="block-label" for="pubKey_pgp">Public Key</label>
+            <textarea class="form-control" style="font-size:10px;" rows="10" id="pubKey_pgp"
+                      placeholder="-----BEGIN PGP PUBLIC KEY BLOCK-----"></textarea>
+          </div>
+        </div>
+
+        <div class="col-sm">
+          <div class="form-group">
+            <label class="block-label" for="plainText_pgp">Input Text</label>
+            <textarea class="form-control" id="plainText_pgp" rows="5" placeholder="Secret Message"></textarea>
+          </div>
+          <div class="form-group progress">
+            <div class="progress-bar" role="progressbar" id="encBar_pgp" style="width:100%"></div>
+          </div>
+          <button type="button" onclick="encryptAction()" class="btn btn-primary">Encrypt</button>
+        </div>
+
+        <div class="col-sm">
+          <div class="form-group">
+            <label class="block-label" for="encResult_pgp">PGP Output</label>
+            <textarea class="form-control" style="font-size:10px;" rows="10" id="encResult_pgp"
+                      placeholder="-----BEGIN PGP MESSAGE-----" readonly></textarea>
+            <button type="button" style="margin-top:1rem;" class="btn btn-primary" data-copy="#encResult_pgp">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row: DECRYPT -->
+      <div class="row" style="margin-top:2rem;">
+        <div class="col-12">
+          <h5>Decrypt</h5>
+          <div class="mini-hint">Paste an armored PGP message and your private key (with passphrase if set). Plaintext will appear on the right.</div>
+          <div class="section-divider"></div>
+        </div>
+
+        <div class="col-sm">
+          <div class="form-group">
+            <label class="block-label" for="pgpMsg_pgp">PGP Message</label>
+            <textarea class="form-control" style="font-size:10px;" rows="10" id="pgpMsg_pgp"
+                      placeholder="-----BEGIN PGP MESSAGE-----"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="block-label" for="privKey_pgp">PGP Private Key</label>
+            <textarea class="form-control" style="font-size:10px;" rows="10" id="privKey_pgp"
+                      placeholder="-----BEGIN PGP PRIVATE KEY BLOCK-----"></textarea>
+          </div>
+        </div>
+
+        <div class="col-sm">
+          <div class="form-group">
+            <label class="block-label" for="pass_pgp">Passphrase (if set)</label>
+            <input type="password" class="form-control" id="pass_pgp" placeholder="Enter passphrase">
+          </div>
+          <div class="form-group progress">
+            <div class="progress-bar" role="progressbar" id="decBar_pgp" style="width:100%"></div>
+          </div>
+          <button type="button" onclick="decryptAction()" class="btn btn-primary">Decrypt</button>
+        </div>
+
+        <div class="col-sm">
+          <div class="form-group">
+            <label class="block-label" for="decResult_pgp">Message</label>
+            <textarea class="form-control" rows="10" id="decResult_pgp" placeholder="Secret Message" readonly></textarea>
+            <button type="button" style="margin-top:1rem;" class="btn btn-primary" data-copy="#decResult_pgp">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SIGN SECTION                               -->
+    <!-- ========================================== -->
+    <div id="section-sign" class="content-section main">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="msg_sign">Message</label>
+              <textarea class="form-control" rows="6" id="msg_sign" placeholder="Message to be signed. Don't sign anything vague as it could be used by someone to pretend to be you, include dates and specifics."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="privKey_sign">PGP Private key</label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" id="privKey_sign" placeholder="-----BEGIN PGP PRIVATE KEY BLOCK-----"></textarea>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="pass_sign">Passphrase (required)</label>
+              <input type="password" class="form-control" id="pass_sign" placeholder="Enter passphrase">
+            </div>
+            <div class="form-group progress">
+              <div class="progress-bar" role="progressbar" id="progressbar_sign" style="width: 100%"></div>
+            </div>
+            <button type="button" onclick="signFunction()" class="btn btn-primary">Sign</button>
+          </div>
+          <div class="col-sm" style="height:100%;">
+            <div class="form-group">
+              <label for="result_sign">PGP Message</label>
+              <textarea class="form-control" style="font-size: 10px;" rows="20" placeholder="-----BEGIN PGP SIGNED MESSAGE-----" id="result_sign" readonly></textarea>
+              <button type="button" style="margin-top: 1rem;" class="btn btn-primary" data-copy="#result_sign">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VERIFY SECTION                             -->
+    <!-- ========================================== -->
+    <div id="section-verify" class="content-section main">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="signMsg_verify">Signed Message</label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" id="signMsg_verify" placeholder="-----BEGIN PGP SIGNED MESSAGE ... END PGP SIGNATURE-----"></textarea>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="pubKey_verify">Public Key</label>
+              <textarea class="form-control" style="font-size: 10px;" id="pubKey_verify" rows="10" placeholder="-----BEGIN PGP PUBLIC KEY BLOCK-----"></textarea>
+            </div>
+            <div class="form-group progress">
+              <div class="progress-bar" role="progressbar" id="progressbar_verify" style="width: 100%"></div>
+            </div>
+            <button type="button" onclick="verifyFunction()" class="btn btn-primary">Verify</button>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="result_verify">PGP Output</label>
+              <textarea class="form-control" style="font-size: 10px;" rows="10" id="result_verify" readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCRIPTS LOGIC                              -->
+    <!-- ========================================== -->
     <script>
+      // --- SPA Navigation Logic ---
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = e.target.getAttribute('data-section');
+          
+          // Toggle active sections
+          document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+          document.getElementById('section-' + target).classList.add('active');
+          
+          // Toggle active nav items
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+          e.target.parentElement.classList.add('active');
+        });
+      });
+
+      // --- About Section Checks ---
       window.addEventListener('DOMContentLoaded', () => {
         const el = document.getElementById('worksCheckVer');
-
-        // Is OpenPGP.js loaded and are core APIs present?
         const openpgpLoaded = !!(window.openpgp && typeof openpgp.readKey === 'function');
-
         const versionLabel = openpgp?.config?.versionString || 'OpenPGP.js';
 
         if (openpgpLoaded) {
-          el.insertAdjacentHTML(
-            'beforeend',
-            `<div class="alert alert-success" role="alert">
-              ${versionLabel} works in this browser!
-            </div>`
-          );
+          el.insertAdjacentHTML('beforeend', `<div class="alert alert-success" role="alert">${versionLabel} works in this browser!</div>`);
         } else {
-          el.insertAdjacentHTML(
-            'beforeend',
-            `<div class="alert alert-danger" role="alert">
-              OpenPGP.js won't start in this browser. Do a
-              <a href="/compatibility.html">compatibility check.</a>
-            </div>`
-          );
+          el.insertAdjacentHTML('beforeend', `<div class="alert alert-danger" role="alert">OpenPGP.js won't start in this browser. Do a <a href="/compatibility.html">compatibility check.</a></div>`);
         }
       });
-    </script>
-    <script>
-      document.getElementById("jsCheck").innerHTML = '<span class="badge badge-pill badge-success">Available!</span>';
-      function isGoodPrngAvailable(){return!("undefined"==typeof window||!window.crypto||!window.crypto.getRandomValues)||"undefined"!=typeof window&&"object"==typeof window.msCrypto&&"function"==typeof window.msCrypto.getRandomValues}
-      if (isGoodPrngAvailable()) {
-        document.getElementById("prngCheck").innerHTML = '<span class="badge badge-pill badge-success">Available!</span>';
-        document.getElementById('success').insertAdjacentHTML('beforeend', '<div class="alert alert-success" role="alert">You have all the requirements to use browserPGP on this device / in this web browser.</div><br>');
-      } else {
-        document.getElementById('success').insertAdjacentHTML('beforeend', '<div class="alert alert-danger" role="alert">You don\'t have the requirements to use browserPGP on this device / in this web browser.</div><br>');
+
+      document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("jsCheck").innerHTML = '<span class="badge badge-pill badge-success">Available!</span>';
+        function isGoodPrngAvailable(){return!("undefined"==typeof window||!window.crypto||!window.crypto.getRandomValues)||"undefined"!=typeof window&&"object"==typeof window.msCrypto&&"function"==typeof window.msCrypto.getRandomValues}
+        if (isGoodPrngAvailable()) {
+          document.getElementById("prngCheck").innerHTML = '<span class="badge badge-pill badge-success">Available!</span>';
+          document.getElementById('success').insertAdjacentHTML('beforeend', '<div class="alert alert-success" role="alert">You have all the requirements to use browserPGP on this device / in this web browser.</div><br>');
+        } else {
+          document.getElementById('success').insertAdjacentHTML('beforeend', '<div class="alert alert-danger" role="alert">You don\'t have the requirements to use browserPGP on this device / in this web browser.</div><br>');
+        }
+      });
+
+      // --- Generate Key Function ---
+      async function generateKeyFunction() {
+        const bar = document.getElementById("progressbar_gen");
+        bar.className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const name = document.getElementById("name_gen").value || '';
+          const email = document.getElementById("email_gen").value || '';
+          const pass = document.getElementById("pass_gen").value || '';
+          const { privateKey, publicKey } = await openpgp.generateKey({
+            type: 'rsa', rsaBits: 4096, userIDs: [{ name, email }], passphrase: pass
+          });
+          document.getElementById("privkey_gen").value = privateKey;
+          document.getElementById("pubkey_gen").value = publicKey;
+          bar.className = "progress-bar bg-success";
+        } catch (err) {
+          const msg = (err && err.message) ? err.message : String(err);
+          document.getElementById("pubkey_gen").value = msg;
+          document.getElementById("privkey_gen").value = msg;
+          bar.className = "progress-bar bg-danger";
+        }
       }
-    </script>
-    <script>
-        (function(){
-          try {
-            if (location.protocol === 'file:') {
-              console.warn('[browserPGP] This page is opened via file://. Some browsers disable WebCrypto in this mode. Prefer http://localhost or HTTPS.');
-            }
-          } catch(_) {}
-        })();
+
+      // --- Encrypt Function ---
+      async function encryptAction() {
+        const bar = document.getElementById("encBar_pgp");
+        bar.className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const pubKeyArmored = document.getElementById("pubKey_pgp").value;
+          const text = document.getElementById("plainText_pgp").value;
+
+          const publicKey = await openpgp.readKey({ armoredKey: pubKeyArmored });
+          const message = await openpgp.createMessage({ text });
+          const armoredMessage = await openpgp.encrypt({ message, encryptionKeys: publicKey });
+
+          document.getElementById("encResult_pgp").value = armoredMessage;
+          bar.className = "progress-bar bg-success";
+        } catch (err) {
+          document.getElementById("encResult_pgp").value = (err && err.message) ? err.message : String(err);
+          bar.className = "progress-bar bg-danger";
+        }
+      }
+
+      // --- Decrypt Function ---
+      async function decryptAction() {
+        const bar = document.getElementById("decBar_pgp");
+        bar.className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const armoredMessage = document.getElementById("pgpMsg_pgp").value;
+          const privKeyArmored = document.getElementById("privKey_pgp").value;
+          const pass = document.getElementById("pass_pgp").value;
+
+          const message = await openpgp.readMessage({ armoredMessage });
+          const privateKey = await openpgp.readPrivateKey({ armoredKey: privKeyArmored });
+          const decryptionKeys = pass
+            ? await openpgp.decryptKey({ privateKey, passphrase: pass })
+            : privateKey;
+
+          const { data } = await openpgp.decrypt({ message, decryptionKeys });
+
+          document.getElementById("decResult_pgp").value = data;
+          bar.className = "progress-bar bg-success";
+        } catch (err) {
+          document.getElementById("decResult_pgp").value = (err && err.message) ? err.message : String(err);
+          bar.className = "progress-bar bg-danger";
+        }
+      }
+
+      // --- Sign Function ---
+      async function signFunction() {
+        const bar = document.getElementById("progressbar_sign");
+        bar.className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const privKeyArmored = document.getElementById("privKey_sign").value;
+          const pass = document.getElementById("pass_sign").value;
+          const text = document.getElementById("msg_sign").value;  
+
+          const privateKey = await openpgp.readPrivateKey({ armoredKey: privKeyArmored });
+          const signingKeys = pass ? await openpgp.decryptKey({ privateKey, passphrase: pass }) : privateKey;
+
+          const cleartext = await openpgp.createCleartextMessage({ text });
+          const signed = await openpgp.sign({ message: cleartext, signingKeys });
+
+          document.getElementById("result_sign").value = signed; 
+          bar.className = "progress-bar bg-success";
+        } catch (err) {
+          document.getElementById("result_sign").value = String(err?.message || err);
+          bar.className = "progress-bar bg-danger";
+        }
+      }
+
+      // --- Verify Function ---
+      async function verifyFunction() {
+        const bar = document.getElementById("progressbar_verify");
+        bar.className = "progress-bar progress-bar-striped progress-bar-animated";
+        try {
+          const signed = document.getElementById("signMsg_verify").value;   
+          const pubKeyArmored = document.getElementById("pubKey_verify").value;
+
+          const cleartext = await openpgp.readCleartextMessage({ cleartextMessage: signed });
+          const verificationKeys = await openpgp.readKey({ armoredKey: pubKeyArmored });
+          const result = await openpgp.verify({ message: cleartext, verificationKeys });
+
+          let ok = false;
+          try { await result.signatures[0].verified; ok = true; } catch (_) { ok = false; }
+
+          document.getElementById("result_verify").value = ok ? 'Signature is valid' : 'Signature is INVALID';
+          bar.className = ok ? "progress-bar bg-success" : "progress-bar bg-danger";
+        } catch (err) {
+          document.getElementById("result_verify").value = (err && err.message) ? err.message : String(err);
+          bar.className = "progress-bar bg-danger";
+        }
+      }
+
+      // --- File Protocol Warning ---
+      (function(){
+        try {
+          if (location.protocol === 'file:') {
+            console.warn('[browserPGP] This page is opened via file://. Some browsers disable WebCrypto in this mode. Prefer http://localhost or HTTPS.');
+          }
+        } catch(_) {}
+      })();
     </script>
   </body>
 </html>
